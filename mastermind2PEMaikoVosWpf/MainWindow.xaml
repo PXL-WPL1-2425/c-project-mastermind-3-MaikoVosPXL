@@ -11,7 +11,7 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Bestand">
                 <MenuItem Header="Nieuw spel" Click="NieuwSpel_Click"></MenuItem>
-                <MenuItem Header="Highscores" Click="Highscores"></MenuItem>
+                <MenuItem Header="Highscores" Click="Highscore_Click"></MenuItem>
                 <MenuItem Header="Afsluiten" Click="Afsluiten_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Instellingen">

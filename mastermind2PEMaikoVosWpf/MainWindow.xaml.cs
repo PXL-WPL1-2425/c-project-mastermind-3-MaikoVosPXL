@@ -130,30 +130,42 @@ namespace mastermind3MaikoVosWpf
         /// </summary>
         private void StartGame()
         {
-            randomNumberColor[0] = PickingRandomColor(rnd.Next(0, 6));
-            randomNumberColor[1] = PickingRandomColor(rnd.Next(0, 6));
-            randomNumberColor[2] = PickingRandomColor(rnd.Next(0, 6));
-            randomNumberColor[3] = PickingRandomColor(rnd.Next(0, 6));
-
+            Array.Clear(highscores, 0, highscores.Length);
+            randomNumberColorGenerator();
             Stopcountdown();
             InputAttempts();
             InputName();
             Startcountdown();
 
-            randomColorSolution = $"{randomNumberColor[0]}, {randomNumberColor[1]}, {randomNumberColor[2]}, {randomNumberColor[3]}";
             totalScore.Content = $"Score: {points}/100";
             totalAttempts.Content = $"Attempts: {attempts}/{maxAttempts}";
+            
+        }
+
+        private void randomNumberColorGenerator()
+        {
+            randomNumberColor[0] = PickingRandomColor(rnd.Next(0, 6));
+            randomNumberColor[1] = PickingRandomColor(rnd.Next(0, 6));
+            randomNumberColor[2] = PickingRandomColor(rnd.Next(0, 6));
+            randomNumberColor[3] = PickingRandomColor(rnd.Next(0, 6));
+
+            randomColorSolution = $"{randomNumberColor[0]}, {randomNumberColor[1]}, {randomNumberColor[2]}, {randomNumberColor[3]}";
             showRandomColors.Text = randomColorSolution;
         }
 
-        private void Highscores(object sender, RoutedEventArgs e)
+        private void Highscores()
         {
             highscoreText = "";
-            for (int i = 0; i < playerIndex; i++)
+            for (int i = 0; i <= playerIndex; i++)
             {
                 highscoreText += $"{highscores[i]}\n";
             }
             MessageBox.Show($"Highscore: \n{highscoreText}");
+        }
+
+        private void Highscore_Click(object sender, RoutedEventArgs e)
+        {
+            Highscores();
         }
 
         private void InputAttempts()
@@ -393,18 +405,55 @@ namespace mastermind3MaikoVosWpf
         {
             if (attempts >= maxAttempts && !CheckingIfWonGame())
             {
-                highscores[playerIndex] = $" {username} - {attempts}/{maxAttempts} attempts - {points}/100";
+                highscores[playerIndex] = $" {playerNames[playerIndex]} - {attempts}/{maxAttempts} attempts - {points}/100";
                 Stopcountdown();
-                MessageBoxResult result = MessageBox.Show($"You failed, the code was {randomColorSolution}.", "Failed", MessageBoxButton.OK, MessageBoxImage.Information);
-                playerIndex++;
+
+                if (playerIndex +1 < playerNames.Count)
+                {
+                    MessageBoxResult result = MessageBox.Show($"You failed, the code was {randomColorSolution}.\nNow it's {playerNames[playerIndex + 1]}'s turn.", $"{playerNames[playerIndex]}", MessageBoxButton.OK, MessageBoxImage.Information);
+                    playerIndex++;
+                }
+                else
+                {
+                    MessageBoxResult result = MessageBox.Show($"You failed, the code was {randomColorSolution}.\nAll players have completed their turns. Check the highscores!", $"{playerNames[playerIndex]}", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Highscores();
+                }
+                attempts = 0;
+                points = 100;
+                totalAttempts.Content = $"Attempts: {attempts}/ {maxAttempts}";
+                totalScore.Content = $"Score: {points}/100";
+                addRows.Children.Clear();
+                ClearingOutMainEllipse();
+                randomNumberColorGenerator();
+                
             }
             else if (CheckingIfWonGame())
             {
-                highscores[playerIndex] = $" {username} - {attempts}/{maxAttempts} attempts - {points}/100";
+                highscores[playerIndex] = $" {playerNames[playerIndex]} - {attempts}/{maxAttempts} attempts - {points}/100";
                 Stopcountdown();
-                MessageBoxResult result = MessageBox.Show($"You won in {attempts} attempts!", "WINNER", MessageBoxButton.OK, MessageBoxImage.Information);
-                playerIndex++;
+
+                if (playerIndex +1 < playerNames.Count)
+                {
+                    MessageBoxResult result = MessageBox.Show($"You won in {attempts} attempts!\nNow it's {playerNames[playerIndex + 1]}'s turn.", $"{playerNames[playerIndex]}", MessageBoxButton.OK, MessageBoxImage.Information);
+                    playerIndex++;
+                }
+                else
+                {
+                    MessageBoxResult result = MessageBox.Show($"You won in {attempts} attempts!\nAll players have completed their turns. Check the highscores!", $"{playerNames[playerIndex]}", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Highscores();
+                    
+                }
+                attempts = 0;
+                points = 100;
+                totalAttempts.Content = $"Attempts: {attempts}/ {maxAttempts}";
+                totalScore.Content = $"Score: {points}/100";
+                addRows.Children.Clear();
+                ClearingOutMainEllipse();
+                randomNumberColorGenerator();
             }
+
+            
+
         }
         /// <summary>
         /// CheckingIfWonGame checkt of de vier gekozen Ellipse een DarkRed brush heeft.
@@ -481,6 +530,9 @@ namespace mastermind3MaikoVosWpf
 
         private void NieuwSpel_Click(object sender, RoutedEventArgs e)
         {
+            addAnotherPlayer = true;
+            playerNames.Clear();
+            playerIndex = 0;
             attempts = 0;
             points = 100;
             totalAttempts.Content = $"Attempts: {attempts}/ {maxAttempts}";
@@ -488,6 +540,7 @@ namespace mastermind3MaikoVosWpf
             addRows.Children.Clear();
             ClearingOutMainEllipse();
             StartGame();
+            
         }
 
         private void Pogingen_Click(object sender, RoutedEventArgs e)
@@ -496,5 +549,7 @@ namespace mastermind3MaikoVosWpf
             InputAttempts();
             Startcountdown();
         }
+
+
     }
 }
