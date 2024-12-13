@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:mastermind3MaikoVosWpf"
-        Title="Mastermind" Height="700" Width="550" Loaded="MainWindowLoader"
+        WindowStartupLocation="CenterScreen"
+        Title="Mastermind" Height="900" Width="800" Loaded="MainWindowLoader"
         KeyDown="ToggleDebug"
         Closing="ClosingGame">
     <DockPanel>
@@ -18,25 +19,22 @@
                 <MenuItem Header="Aantal pogingen" Click="Pogingen_Click"></MenuItem>
             </MenuItem>
         </Menu>
-    <Grid>
-        <Grid.Background>
-            <ImageBrush ImageSource="/images/yu gi oh card.jpg"/>
-        </Grid.Background>
-        <Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="25px"/>
-            <RowDefinition Height="90px"/>
+            <RowDefinition Height="20px"/>
+            <RowDefinition Height="50px"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="50px"/>
+            <RowDefinition Height="38px"/>
             <RowDefinition Height="30px"/>
-            <RowDefinition Height="50px"/>
+            <RowDefinition Height="20px"/>
         </Grid.RowDefinitions>
-        <ComboBox x:Name="colorOneComboBox" Grid.Row="0" Grid.Column="0" FontSize="14" SelectionChanged="ColorChange" BorderBrush="{x:Null}">
+        <ComboBox x:Name="colorOneComboBox" Grid.Row="0" Grid.Column="0" FontSize="12" SelectionChanged="ColorChange" BorderBrush="{x:Null}">
             <ComboBoxItem Content="Red" Background="Red"/>
             <ComboBoxItem Content="Yellow" Background="Yellow"/>
             <ComboBoxItem Content="Orange" Background="Orange"/>
@@ -44,7 +42,7 @@
             <ComboBoxItem Content="Green" Background="Green"/>
             <ComboBoxItem Content="Blue" Background="Blue"/>
         </ComboBox>
-        <ComboBox x:Name="colorTwoComboBox" Grid.Row="0" Grid.Column="1" FontSize="14" SelectionChanged="ColorChange">
+        <ComboBox x:Name="colorTwoComboBox" Grid.Row="0" Grid.Column="1" FontSize="12" SelectionChanged="ColorChange">
             <ComboBoxItem Content="Red" Background="Red"/>
             <ComboBoxItem Content="Yellow" Background="Yellow"/>
             <ComboBoxItem Content="Orange" Background="Orange"/>
@@ -52,7 +50,7 @@
             <ComboBoxItem Content="Green" Background="Green"/>
             <ComboBoxItem Content="Blue" Background="Blue"/>
         </ComboBox>
-        <ComboBox x:Name="colorThreeComboBox" Grid.Row="0" Grid.Column="2" FontSize="14" SelectionChanged="ColorChange">
+        <ComboBox x:Name="colorThreeComboBox" Grid.Row="0" Grid.Column="2" FontSize="12" SelectionChanged="ColorChange">
             <ComboBoxItem Content="Red" Background="Red"/>
             <ComboBoxItem Content="Yellow" Background="Yellow"/>
             <ComboBoxItem Content="Orange" Background="Orange"/>
@@ -60,7 +58,7 @@
             <ComboBoxItem Content="Green" Background="Green"/>
             <ComboBoxItem Content="Blue" Background="Blue"/>
         </ComboBox>
-        <ComboBox x:Name="colorFourComboBox" Grid.Row="0" Grid.Column="3" FontSize="14" SelectionChanged="ColorChange">
+        <ComboBox x:Name="colorFourComboBox" Grid.Row="0" Grid.Column="3" FontSize="12" SelectionChanged="ColorChange">
             <ComboBoxItem Content="Red" Background="Red"/>
             <ComboBoxItem Content="Yellow" Background="Yellow"/>
             <ComboBoxItem Content="Orange" Background="Orange"/>
@@ -69,11 +67,11 @@
             <ComboBoxItem Content="Blue" Background="Blue"/>
         </ComboBox>
         <Button x:Name="checkCodeButton" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" Content="Check code" BorderBrush="Black" BorderThickness="2,2,2,2" FontSize="14" FontWeight="Bold" Click="CheckCodeButton_Click" Background="LightGray"/>
-        <Ellipse Name="colorFieldOne" Grid.Column="0" Grid.Row="1" Margin="33,15,33,15"/>
-        <Ellipse Name="colorFieldTwo" Grid.Column="1" Grid.Row="1" Margin="33,15,33,15"/>
-        <Ellipse Name="colorFieldThree" Grid.Column="2" Grid.Row="1" Margin="33,15,33,15"/>
-        <Ellipse Name="colorFieldFour" Grid.Column="3" Grid.Row="1" Margin="33,15,33,15"/>
-        <Grid x:Name="addRows" Margin="64.9,4,64,60" Grid.Row="2" Grid.ColumnSpan="4" ShowGridLines="False" Background="LightGray">
+        <Ellipse Name="colorFieldOne" Grid.Column="0" Grid.Row="1" Margin="75,5,75,5"/>
+        <Ellipse Name="colorFieldTwo" Grid.Column="1" Grid.Row="1" Margin="75,5,75,5"/>
+        <Ellipse Name="colorFieldThree" Grid.Column="2" Grid.Row="1" Margin="75,5,75,5"/>
+        <Ellipse Name="colorFieldFour" Grid.Column="3" Grid.Row="1" Margin="75,5,75,5"/>
+            <Grid x:Name="addRows" Margin="50,4,50,10" Grid.Row="2" Grid.ColumnSpan="4" ShowGridLines="False" Width="400">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -81,10 +79,11 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
         </Grid>
+        <Label Name="activePlayer" Content="" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <Label Name="totalAttempts" Content="" HorizontalAlignment="Right" Grid.Row="3" VerticalAlignment="Center" FontWeight="Bold" />
         <Label Name="totalScore" Content="" HorizontalAlignment="Left" Grid.Row="3" Grid.Column="3" VerticalAlignment="Center" FontWeight="Bold"/>
-        <TextBox x:Name="showRandomColors" Text="" Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" KeyDown="ToggleDebug" Width="200" Visibility="Hidden" TextAlignment="Center" Background="White" IsEnabled="False"/>
-        <TextBox x:Name="timerText" Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Width="200" Visibility="Hidden" KeyDown="ToggleDebug"  TextAlignment="Center" Background="White" IsEnabled="False"/>
+        <TextBox x:Name="showRandomColors" Text="" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" KeyDown="ToggleDebug" Width="200" Visibility="Hidden" TextAlignment="Center" Background="White" IsEnabled="False"/>
+        <TextBox x:Name="timerText" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Width="200" Visibility="Hidden" KeyDown="ToggleDebug"  TextAlignment="Center" Background="White" IsEnabled="False"/>
     </Grid>
     </DockPanel>
 </Window>
