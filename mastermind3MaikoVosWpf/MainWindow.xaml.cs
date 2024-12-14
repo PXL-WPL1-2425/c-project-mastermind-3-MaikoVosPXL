@@ -57,7 +57,6 @@ namespace mastermind3MaikoVosWpf
         /// <param name="e"> De gegevens van het event.</param>
         private void MainWindowLoader(object sender, RoutedEventArgs e)
         {
-            StartCountdown();
             StartGame();
             playerIndex = 0;
         }
@@ -94,19 +93,14 @@ namespace mastermind3MaikoVosWpf
         private void StartCountdown()
         {
             elapsedTime = totalTime;
-            timer.Start();
-                    
+            timer.Start();      
         }
 
         private void ResumeCountdown()
         {
             timer.Start();
         }
-        private void PauseCountdown()
-        {
-            timer.Stop();
-        }
-
+  
         private void StopCountdown()
         {
             timer.Stop();
@@ -152,7 +146,6 @@ namespace mastermind3MaikoVosWpf
 
             totalScore.Content = $"Score: {points}/100";
             totalAttempts.Content = $"Attempts: {attempts}/{maxAttempts}";
-            
         }
 
         private void randomNumberColorGenerator()
@@ -328,18 +321,23 @@ namespace mastermind3MaikoVosWpf
             if (input.Text == "" || !randomNumberColor.Contains(input.Text))
             {
                 points -= 2;
-                colorChecker.StrokeThickness = 5;
+                colorChecker.Stroke = Brushes.Transparent;
+                colorChecker.StrokeThickness = 0;
+                
+                
             }
             else if (randomNumberColor.Contains(input.Text) && input.Text != "" && input.Text != solution)
             {
                 points -= 1;
                 colorChecker.Stroke = Brushes.Wheat;
                 colorChecker.StrokeThickness = 4;
+                
             }
             else
             {
                 colorChecker.Stroke = Brushes.DarkRed;
                 colorChecker.StrokeThickness = 4;
+                
             }
             totalScore.Content = $"Score: {points}/100";
 
@@ -347,6 +345,23 @@ namespace mastermind3MaikoVosWpf
             {
                 MessageBox.Show("Invalid color", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private string ToolTipInfo(ComboBox input, Ellipse selectedEllipse)
+        {
+            if (input.Text == "")
+            {
+                return "Invalid color";
+            }
+            if (selectedEllipse.Stroke == Brushes.DarkRed)
+            {
+                return "Correct color, correct position.";
+            }
+            if (selectedEllipse.Stroke == Brushes.Wheat)
+            {
+                return "Correct color, wrong position.";
+            }
+                return "Wrong color.";
         }
         /// <summary>
         /// Create nieuwe rows en plaatst de Ellipse in deze rows.
@@ -376,6 +391,7 @@ namespace mastermind3MaikoVosWpf
                 makingNewEllipse.Height = 30;
                 makingNewEllipse.Width = 30;
                 makingNewEllipse.Margin = new Thickness(1.8);
+                makingNewEllipse.ToolTip = ToolTipInfo(guess[i], selectedEllipse[i]);
 
                 Grid.SetRow(makingNewEllipse, rows);
                 Grid.SetColumn(makingNewEllipse, i);
@@ -443,8 +459,6 @@ namespace mastermind3MaikoVosWpf
                 addRows.Children.Clear();
                 ClearingOutMainEllipse();
                 randomNumberColorGenerator();
-                
-
             }
             else if (CheckingIfWonGame())
             {
@@ -471,7 +485,6 @@ namespace mastermind3MaikoVosWpf
                 addRows.Children.Clear();
                 ClearingOutMainEllipse();
                 randomNumberColorGenerator();
-                
             }
         }
         /// <summary>
@@ -561,7 +574,6 @@ namespace mastermind3MaikoVosWpf
             addRows.Children.Clear();
             ClearingOutMainEllipse();
             StartGame();
-            
         }
 
         private void Pogingen_Click(object sender, RoutedEventArgs e)
@@ -574,11 +586,8 @@ namespace mastermind3MaikoVosWpf
         private void BuyHint_Click(object sender, RoutedEventArgs e)
         {
             
-            PauseCountdown();
-            MessageBoxResult result = MessageBox.Show("Yes = Correct Color (15 points)\nNo = Correct Color in the Correct Position (25 points)\n",
-                                                        "Buy Hint",
-                                                        MessageBoxButton.YesNoCancel,
-                                                        MessageBoxImage.Question);
+            StopCountdown();
+            MessageBoxResult result = MessageBox.Show("Yes = Correct Color (15 points)\nNo = Correct Color in the Correct Position (25 points)\n", "Buy Hint", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.Yes)
             {

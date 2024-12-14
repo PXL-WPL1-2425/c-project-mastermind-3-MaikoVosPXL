@@ -20,6 +20,9 @@
             </MenuItem>
         </Menu>
         <Grid>
+            <Grid.Background>
+                <ImageBrush ImageSource="/Images/Dragonball background2.jpg" />
+            </Grid.Background>
             <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
@@ -80,11 +83,11 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
         </Grid>
-        <Label Name="activePlayer" Content="" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Label Name="activePlayer" Content="" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Top" FontWeight="Bold"/>
         <Label Name="totalAttempts" Content="" HorizontalAlignment="Right" Grid.Row="3" VerticalAlignment="Center" FontWeight="Bold" />
         <Label Name="totalScore" Content="" HorizontalAlignment="Left" Grid.Row="3" Grid.Column="3" VerticalAlignment="Center" FontWeight="Bold"/>
         <TextBox x:Name="showRandomColors" Text="" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" KeyDown="ToggleDebug" Width="200" Visibility="Hidden" TextAlignment="Center" Background="White" IsEnabled="False"/>
-        <TextBox x:Name="timerText" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Width="200" Visibility="Hidden" KeyDown="ToggleDebug"  TextAlignment="Center" Background="White" IsEnabled="False"/>
+        <TextBox x:Name="timerText" Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Width="200" Visibility="Visible" KeyDown="ToggleDebug"  TextAlignment="Center" Background="White" IsEnabled="False"/>
     </Grid>
     </DockPanel>
 </Window>

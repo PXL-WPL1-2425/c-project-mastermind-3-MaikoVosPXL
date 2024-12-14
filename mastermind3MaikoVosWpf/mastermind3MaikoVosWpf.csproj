@@ -96,7 +96,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\yu gi oh card.jpg" />
+    <Resource Include="Images\Dragonball background3.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Dragonball background2.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
