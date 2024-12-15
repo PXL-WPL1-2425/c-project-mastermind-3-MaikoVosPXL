@@ -25,6 +25,8 @@ namespace mastermind3MaikoVosWpf
         Random rnd = new Random();
         ComboBox[] guess = new ComboBox[4];
         Ellipse[] selectedEllipse = new Ellipse[4];
+        Label playerNameLabel = new Label();
+        List<Label> playerLabels = new List<Label>();
         string[] randomNumberColor = new string[4];
         string[] naamInput = new string[15];
         string[] highscores = new string[15];
@@ -137,11 +139,13 @@ namespace mastermind3MaikoVosWpf
         /// </summary>
         private void StartGame()
         {
+            playerLabels.Clear();
             Array.Clear(highscores, 0, highscores.Length);
             randomNumberColorGenerator();
             StopCountdown();
             InputAttempts();
             InputName();
+            HighlightActivePlayer();
             StartCountdown();
 
             totalScore.Content = $"Score: {points}/100";
@@ -204,6 +208,7 @@ namespace mastermind3MaikoVosWpf
                 }
 
                 playerNames.Add(username);
+                MakingNewPlayerLabels(username);
 
                 MessageBoxResult result = MessageBox.Show("Do you want to add a new name?","Adding player",MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if ( result == MessageBoxResult.No)
@@ -211,7 +216,9 @@ namespace mastermind3MaikoVosWpf
                     addAnotherPlayer = false;
                 }
             }
+            
             activePlayer.Content = $"The current player is {playerNames[playerIndex]}";
+           
         }
 
         /// <summary>
@@ -414,6 +421,7 @@ namespace mastermind3MaikoVosWpf
                 EllipseColorCheck(colorFieldTwo, randomNumberColor, 1, colorTwoComboBox);
                 EllipseColorCheck(colorFieldThree, randomNumberColor, 2, colorThreeComboBox);
                 EllipseColorCheck(colorFieldFour, randomNumberColor, 3, colorFourComboBox);
+                
 
                 ShowGuess();
                 if (attempts >= maxAttempts)
@@ -425,6 +433,7 @@ namespace mastermind3MaikoVosWpf
                 {
                     attempts++;
                     totalAttempts.Content = $"Attempts: {attempts}/ {maxAttempts}";
+                    UpdatePlayerStats(playerNames[playerIndex], attempts, points);
                     CheckingAttempts();
                     StartCountdown();
                 }
@@ -441,16 +450,20 @@ namespace mastermind3MaikoVosWpf
 
                 if (playerIndex +1 < playerNames.Count)
                 {
+                    UpdatePlayerStats(playerNames[playerIndex], attempts, points);
                     MessageBoxResult result = MessageBox.Show($"You failed, the code was {randomColorSolution}.\nNow it's {playerNames[playerIndex + 1]}'s turn.", $"{playerNames[playerIndex]}", MessageBoxButton.OK, MessageBoxImage.Information);
                     playerIndex++;
+                    NextPlayer();
                     activePlayer.Content = $"The current player is {playerNames[playerIndex]}";
                 }
                 else
                 {
+                    UpdatePlayerStats(playerNames[playerIndex], attempts, points);
                     activePlayer.Content = "";
                     MessageBoxResult result = MessageBox.Show($"You failed, the code was {randomColorSolution}.\nAll players have completed their turns. Check the highscores!", $"{playerNames[playerIndex]}", MessageBoxButton.OK, MessageBoxImage.Information);
                     Highscores();
-     
+                    playerInfo.Children.Clear();
+
                 }
                 attempts = 0;
                 points = 100;
@@ -467,16 +480,20 @@ namespace mastermind3MaikoVosWpf
 
                 if (playerIndex +1 < playerNames.Count)
                 {
+                    UpdatePlayerStats(playerNames[playerIndex],attempts,points);
                     MessageBoxResult result = MessageBox.Show($"You won in {attempts} attempts!\nNow it's {playerNames[playerIndex + 1]}'s turn.", $"{playerNames[playerIndex]}", MessageBoxButton.OK, MessageBoxImage.Information);
                     playerIndex++;
+                    NextPlayer();
                     activePlayer.Content = $"The current player is {playerNames[playerIndex]}";
                 }
                 else
                 {
+                    UpdatePlayerStats(playerNames[playerIndex], attempts, points);
                     activePlayer.Content = "";
                     MessageBoxResult result = MessageBox.Show($"You won in {attempts} attempts!\nAll players have completed their turns. Check the highscores!", $"{playerNames[playerIndex]}", MessageBoxButton.OK, MessageBoxImage.Information);
                     Highscores();
-                                        
+                    playerInfo.Children.Clear();
+
                 }
                 attempts = 0;
                 points = 100;
@@ -595,6 +612,7 @@ namespace mastermind3MaikoVosWpf
                 {
                     points -= 15;
                     TheRightColor();
+                    
                 }
                 else
                 {
@@ -607,6 +625,7 @@ namespace mastermind3MaikoVosWpf
                 {
                     points -= 25;
                     TheRightColorAndPosition();
+                    
                 }
                 else
                 {
@@ -619,6 +638,7 @@ namespace mastermind3MaikoVosWpf
             }
 
             totalScore.Content = $"Score: {points}/100";
+            UpdatePlayerStats(playerNames[playerIndex], attempts, points);
             ResumeCountdown();
         }
 
@@ -680,6 +700,67 @@ namespace mastermind3MaikoVosWpf
             }
             
             availableHintRightPosition.Clear();
+        }
+
+        private void MakingNewPlayerLabels(string username)
+        {
+            RowDefinition newPlayerRow = new RowDefinition();
+            newPlayerRow.Height = new GridLength(50);
+            playerInfo.RowDefinitions.Add(newPlayerRow);
+
+            playerNameLabel = new Label();
+
+            playerNameLabel.HorizontalContentAlignment = HorizontalAlignment.Left;
+            playerNameLabel.VerticalContentAlignment = VerticalAlignment.Center;
+            playerNameLabel.FontSize = 10;
+            playerNameLabel.Content = username;
+            playerNameLabel.BorderThickness = new Thickness(1);
+            playerNameLabel.BorderBrush = Brushes.Black;
+
+            Grid.SetRow(playerNameLabel, playerNames.Count - 1);
+            Grid.SetColumn(playerNameLabel, 0); 
+
+            playerInfo.Children.Add(playerNameLabel);
+            playerLabels.Add(playerNameLabel);
+        }
+
+        private void UpdatePlayerStats(string username, int attempts, int score)
+        {
+            int playerIndex = playerNames.IndexOf(username);
+
+            if (playerIndex >= 0 && playerIndex < playerLabels.Count)
+            {
+                Label playerLabel = playerLabels[playerIndex];
+                playerLabel.Content = $"{username}\nAttempts: {attempts}/{maxAttempts}\nScore: {score}/100";
+            }
+            else
+            {
+                MessageBox.Show($"Player {username} not found!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void HighlightActivePlayer()
+        {
+            for (int i = 0; i < playerLabels.Count; i++)
+            {
+                playerLabels[i].Background = Brushes.Transparent;
+            }
+
+            if (playerIndex >= 0 && playerIndex < playerLabels.Count)
+            {
+                playerLabels[playerIndex].Background = Brushes.LightGreen;
+            }
+        }
+
+        private void NextPlayer()
+        {
+            if (playerIndex >= 0 && playerIndex < playerLabels.Count)
+            {
+                playerLabels[playerIndex].Background = Brushes.Transparent;
+            }
+
+            playerIndex = (playerIndex) % playerNames.Count;
+            HighlightActivePlayer();
         }
     }
 }
